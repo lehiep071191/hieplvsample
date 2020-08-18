@@ -14,6 +14,16 @@
 			<%= f.password_field :password, class: 'form-control' %>
 			<%= f.label :password_confirmation, "Confirmation" %>
 			<%= f.password_field :password_confirmation, class: 'form-control' %>
+			<%= f.label :diachi,"Địa Chỉ" %>
+			<%= f.text_field :diachi, class: 'form-control' %>
+			<%= f.label :sinhnhat ,"Ngày Sinh"%>
+			<%= f.date_field :sinhnhat, class: 'form-control' %>
+			
+				<div>	
+					<%= collection_radio_buttons(:user, :gioitinh, User.gioitinhs, :first, :first) do |fradio|%>
+					  <% fradio.label(:"data-value" => fradio.value) { fradio.radio_button + fradio.text } %> 
+				    <% end %>
+		 		</div>
 			<%= f.submit "Create my account", class: "btn btn-primary" %>
 
 		<% end %>

@@ -53,3 +53,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'bootstrap-sass', '3.4.1'
 gem 'bcrypt', '3.1.13'
+gem "jquery-rails"
+gem "pusher"
+gem "figaro"
