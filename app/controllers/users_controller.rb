@@ -1,15 +1,15 @@
 class UsersController < ApplicationController
 	before_action :check_logged_in, only: :new
 	before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
-	before_action :correct_user,only: [:edit, :update]
-	before_action :admin_user,only: :destroy
-	def index
-		@users = User.paginate(page: params[:page])
-	end
+	before_action :correct_user, only: [:edit, :update]
+	before_action :admin_user, only: :destroy
+  	
+  	def index
+  		@users = User.paginate(page: params[:page])
+  	end	
+
   	def show
 		@user = User.find_by id:params[:id]	
-
-
 		if @user.nil?
 			flash[:danger] = "lỗi cmmr"
 			redirect_to help_path
@@ -22,20 +22,23 @@ class UsersController < ApplicationController
 		@user = User.new(user_params)
 		if @user.save
 			log_in @user
-
 			flash[:success] = "Welcome to the Sample App!"
 			redirect_to @user
-		# Handle a successful save.
 		else
-			render :new
+			render 'new'
 		end
 
+	end
+	def edit
+		@user = User.find(params[:id])
 	end	
+
 	def edit
 	end
 
 	def update
 		@user = User.find(params[:id])
+
 		if @user.update(user_params)
 			flash[:success] = "Profile updated"
 			redirect_to @user
@@ -43,6 +46,22 @@ class UsersController < ApplicationController
 		else
 			render 'edit'
 		end
+	end
+
+
+	def destroy
+		User.find(params[:id]).destroy
+		flash[:success] = "User deleted"
+		redirect_to users_url
+
+	end	
+	private
+	def admin_user
+		redirect_to(root_url) unless current_user.admin?
+	end
+
+	def user_params
+		params.require(:user).permit(:name, :email, :password, :password_confirmation, :sinhnhat, :diachi, :gioitinh)
 	end
 	def logged_in_user
 		unless logged_in?
@@ -53,22 +72,7 @@ class UsersController < ApplicationController
 	end
 	def correct_user
 		@user = User.find(params[:id])
-		redirect_to(root_url) unless current_user?(@user)
-	end
-	def destroy
-		User.find(params[:id]).destroy
-		flash[:success] = "User deleted"
-		redirect_to users_url
-	end	
-	private
-	def admin_user
-		redirect_to(root_url) unless current_user.admin?
-	end
-
-
-	def user_params
-		params.require(:user).permit(:name, :email, :password,
-									 	:password_confirmation)
+		redirect_to(root_url) unless current_user.current_user?(@user)
 	end
 	def check_logged_in
 		if logged_in?
